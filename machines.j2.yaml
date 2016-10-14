@@ -1,0 +1,21 @@
+{%- set box = 'packer/centos72' %}
+{%- set gui = false %}
+{%- set mem = 512 %}
+{%- set master_ip = "10.34.57.11" %}
+---
+ssh: &ssh
+  username: root
+  password: vagrant
+
+machines:
+- name: master
+  box: {{ box }}
+  mem: 1024
+  cpus: 2
+  gui: {{ gui }}
+  hostname: master.test.env
+  ssh: *ssh
+  private_network:
+    ip: {{ master_ip }}
+  shell: |
+    yum install -y git vim svn
