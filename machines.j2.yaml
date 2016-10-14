@@ -1,6 +1,5 @@
 {%- set box = 'packer/centos72' %}
 {%- set gui = false %}
-{%- set mem = 512 %}
 {%- set master_ip = "10.34.57.11" %}
 ---
 ssh: &ssh
@@ -10,10 +9,10 @@ ssh: &ssh
 machines:
 - name: master
   box: {{ box }}
-  mem: 1024
-  cpus: 2
+  mem: 2048
+  cpus: 4
   gui: {{ gui }}
-  hostname: master.test.env
+  hostname: master.k8s.env
   ssh: *ssh
   private_network:
     ip: {{ master_ip }}
