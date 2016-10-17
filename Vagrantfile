@@ -37,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         node.ssh.password = ssh["password"]
       end
 
-      if machine.include?(:synced_folders)
+      if machine.include?('synced_folders')
           synced_folders = machine['synced_folders']
           synced_folders.each do |synced_folder|
             node.vm.synced_folder synced_folder['host'], synced_folder['guest']
