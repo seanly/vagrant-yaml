@@ -1,20 +1,20 @@
-{%- set box = 'packer/centos72' %}
-{%- set gui = false %}
-{%- set master_ip = "10.34.57.11" %}
+{%- set box = 'centos7' %}
+{%- set master_ip = "192.168.77.11" %}
 ---
 ssh: &ssh
   username: root
   password: vagrant
 
 machines:
-- name: master
+- name: docker01
   box: {{ box }}
   mem: 2048
   cpus: 4
-  gui: {{ gui }}
-  hostname: master.k8s.env
+  hostname: docker01.yewu.js
   ssh: *ssh
   private_network:
     ip: {{ master_ip }}
   shell: |
-    yum install -y git vim svn
+    yum install -y git vim svn docker
+    curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://7bf0d24a.m.daocloud.io
+    systemctl restart docker
