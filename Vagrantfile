@@ -10,8 +10,6 @@ require 'yaml'
 yaml_ctx = YAML.load_file 'nodes.yaml'
 machines = yaml_ctx['machines']
 
-p yaml_ctx.instance_of? Hash
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   machines.each do |machine|
