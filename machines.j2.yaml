@@ -1,4 +1,4 @@
-{%- set box = 'centos7' %}
+{%- set box = 'packer/centos72' %}
 {%- set master_ip = "192.168.77.11" %}
 ---
 ssh: &ssh
@@ -15,6 +15,9 @@ machines:
   private_network:
     ip: {{ master_ip }}
   shell: |
-    yum install -y git vim svn docker
+    yum install -y git vim svn tmux docker curl ctags
     curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://7bf0d24a.m.daocloud.io
     systemctl restart docker
+    mkdir -p dev
+    cd dev && git clone https://github.com/seanly/dotfiles.git && ./install.sh
+    
