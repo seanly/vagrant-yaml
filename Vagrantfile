@@ -6,7 +6,6 @@ VAGRANTFILE_API_VERSION = "2"
 
 require 'yaml'
 
-`python parser.py`
 yaml_ctx = YAML.load_file 'nodes.yaml'
 machines = yaml_ctx['machines']
 
