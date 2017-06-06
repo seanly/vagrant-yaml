@@ -29,16 +29,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         if ARGV[0] == "up"
           if ! File.exist?(data_disk)
             vb.customize [
-              'storagectl', :id,
-              '--name', 'SATA Controller',
-              '--add', 'sata',
-              '--portcount', '5',
-              '--controller', 'IntelAhci',
-              '--bootable', 'on'
-            ]
-          end
-          if ! File.exist?(data_disk)
-            vb.customize [
               'createhd', 
               '--filename', data_disk, 
               '--format', 'VDI', 
