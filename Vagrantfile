@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         if machine['cpus']
           vb.cpus = machine['cpus']
         end
-        data_disk = ".disk/data.vdi"
+        data_disk = ".disk/#{machine['name']}-data.vdi"
         if ARGV[0] == "up"
           if ! File.exist?(data_disk)
             vb.customize [
