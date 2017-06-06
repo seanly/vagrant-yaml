@@ -16,15 +16,43 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define machine['name'] do |node|
       node.vm.box = machine['box']
       node.vm.provider 'virtualbox' do |vb|
-          if machine.include?('mem')
-            vb.memory = machine['mem']
+        if machine.include?('mem')
+          vb.memory = machine['mem']
+        end
+        if machine.include?('gui')
+          vb.gui = machine['gui']
+        end
+        if machine['cpus']
+          vb.cpus = machine['cpus']
+        end
+        data_disk = ".disk/data.vdi"
+        if ARGV[0] == "up"
+          if ! File.exist?(data_disk)
+            vb.customize [
+              'storagectl', :id,
+              '--name', 'SATA Controller',
+              '--add', 'sata',
+              '--portcount', '5',
+              '--controller', 'IntelAhci',
+              '--bootable', 'on'
+            ]
           end
-          if machine.include?('gui')
-            vb.gui = machine['gui']
+          if ! File.exist?(data_disk)
+            vb.customize [
+              'createhd', 
+              '--filename', data_disk, 
+              '--format', 'VDI', 
+              '--size', 10 * 1024 # 10 GB
+            ] 
           end
-          if machine['cpus']
-            vb.cpus = machine['cpus']
-          end
+          vb.customize [
+            'storageattach', :id, 
+            '--storagectl', 'SATA Controller', 
+            '--port', 2, '--device', 0, 
+            '--type', 'hdd', '--medium', 
+            data_disk
+          ]
+        end
       end
 
       private_network = machine['private_network']

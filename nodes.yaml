@@ -3,65 +3,67 @@
 ssh: &ssh
   username: root
   password: vagrant
+synced_folders: &synced_folders
+- host: salt/roots/salt
+  guest: /srv/salt
 
 machines:
 - name: master
-  box: centos7
-  mem: 2048
-  cpus: 2
-  hostname: master.yewu.js
-  ssh: *ssh
-  private_network:
-    ip: 192.168.77.11
-  shell: |
-    yum install -y git vim svn tmux docker curl ctags
-    curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://7bf0d24a.m.daocloud.io
-    systemctl restart docker
-    mkdir -p dev && cd dev && git clone https://github.com/seanly/dotfiles.git
-- name: node01    
-  box: centos7
-  mem: 2048
-  cpus: 4
-  hostname: node01.yewu.js
-  ssh: *ssh
-  private_network:
-    ip: 192.168.77.12
-  shell: |
-    yum install -y git vim svn tmux docker curl ctags
-    curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://7bf0d24a.m.daocloud.io
-    systemctl restart docker
-- name: node02
-  box: centos7
-  mem: 1024
-  cpus: 2
-  hostname: node02.yewu.js
-  ssh: *ssh
-  private_network:
-    ip: 192.168.77.13
-  shell: |
-    yum install -y git vim svn tmux docker curl ctags
-    curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://7bf0d24a.m.daocloud.io
-    systemctl restart docker
-
-- name: node03
-  box: centos7
-  mem: 1024
-  cpus: 2
-  hostname: node02.yewu.js
-  ssh: *ssh
-  private_network:
-    ip: 192.168.77.14
-  shell: |
-    yum install -y git vim svn tmux docker curl ctags
-    curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://7bf0d24a.m.daocloud.io
-    systemctl restart docker
-- name: gcc
   box: centos6
-  mem: 2048
-  cpus: 2
-  hostname: gcc.build.yewu.js
+  mem: 1024
+  cpus: 1
+  gui: False
+  hostname: master.dev.salt.yewu.js
   ssh: *ssh
+  synced_folders: 
+    - host: salt
+      guest: /salt
+    - host: salt/roots/salt
+      guest: /srv/salt
   private_network:
-    ip: 192.168.77.15
+    ip: 192.168.56.11
   shell: |
-    yum install -y git vim svn curl ctags
+    yum install -y salt*
+    yum install -y git vim svn
+    rm -rf /etc/salt/master.d
+    ln -s /salt/etc/master.d /etc/salt/master.d
+    ln -s /salt/etc/extmods /etc/salt/extmods
+    sed -i '/^#default_include:/s;^#;;' /etc/salt/master
+    service salt-master restart
+- name: nginx
+  box: centos6
+  mem: 2048 
+  cpu: 2
+  gui: False
+  hostname: nginx
+  ssh: *ssh
+  synced_folders: *synced_folders
+  private_network:
+    ip: 192.168.56.12
+  shell: |
+    yum install -y salt-minion
+    mkdir -p /etc/salt
+    sed -i 's;^#master:.*;master: 192.168.56.11;' /etc/salt/minion
+    echo "nginx.dev.salt.yewu.js" > /etc/salt/minion_id
+    service salt-minion restart
+
+- name: k8s-master
+  box: packer/centos72
+  mem: 2048 
+  cpu: 2
+  gui: False
+  hostname: k8s-master
+  ssh: *ssh
+  synced_folders: *synced_folders
+  private_network:
+    ip: 192.168.57.11
+- name: k8s-node-1
+  box: packer/centos72
+  mem: 2048 
+  cpu: 2
+  gui: False
+  hostname: k8s-node-1
+  ssh: *ssh
+  synced_folders: *synced_folders
+  private_network:
+    ip: 192.168.57.12
