@@ -15,6 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.define machine['name'] do |node|
       node.vm.box = machine['box']
+      node.vm.box_check_update = false
       node.vm.provider 'virtualbox' do |vb|
         if machine.include?('mem')
           vb.memory = machine['mem']
@@ -26,6 +27,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           vb.cpus = machine['cpus']
         end
         data_disk = ".disk/#{machine['name']}-data.vdi"
+        controller = 'SATAController'
+        if machine.include?('controller')
+          controller = machine['controller']
+        end
         if ARGV[0] == "up"
           if ! File.exist?(data_disk)
             vb.customize [
@@ -37,7 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           end
           vb.customize [
             'storageattach', :id, 
-            '--storagectl', 'SATA Controller', 
+            '--storagectl', controller, 
             '--port', 2, '--device', 0, 
             '--type', 'hdd', '--medium', 
             data_disk

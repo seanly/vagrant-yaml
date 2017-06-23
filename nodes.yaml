@@ -13,6 +13,7 @@ machines:
   mem: 1024
   cpus: 1
   gui: False
+  controller: SATA Controller
   hostname: master.dev.salt.yewu.js
   ssh: *ssh
   synced_folders: 
@@ -35,6 +36,7 @@ machines:
   mem: 2048 
   cpu: 2
   gui: False
+  controller: SATA Controller
   hostname: nginx
   ssh: *ssh
   synced_folders: *synced_folders
@@ -52,6 +54,7 @@ machines:
   mem: 2048 
   cpu: 2
   gui: False
+  controller: SATA Controller
   hostname: k8s-master
   ssh: *ssh
   synced_folders: *synced_folders
@@ -62,6 +65,7 @@ machines:
   mem: 2048 
   cpu: 2
   gui: False
+  controller: SATA Controller
   hostname: k8s-node-1
   ssh: *ssh
   synced_folders: *synced_folders
