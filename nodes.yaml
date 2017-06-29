@@ -3,9 +3,6 @@
 ssh: &ssh
   username: root
   password: vagrant
-synced_folders: &synced_folders
-- host: salt/roots/salt
-  guest: /srv/salt
 
 machines:
 - name: master
@@ -39,7 +36,6 @@ machines:
   controller: SATA Controller
   hostname: nginx
   ssh: *ssh
-  synced_folders: *synced_folders
   private_network:
     ip: 192.168.56.12
   shell: |
@@ -50,24 +46,22 @@ machines:
     service salt-minion restart
 
 - name: k8s-master
-  box: packer/centos72
+  box: centos7
   mem: 2048 
   cpu: 2
   gui: False
   controller: SATA Controller
   hostname: k8s-master
   ssh: *ssh
-  synced_folders: *synced_folders
   private_network:
     ip: 192.168.57.11
 - name: k8s-node-1
-  box: packer/centos72
+  box: centos7
   mem: 2048 
   cpu: 2
   gui: False
   controller: SATA Controller
   hostname: k8s-node-1
   ssh: *ssh
-  synced_folders: *synced_folders
   private_network:
     ip: 192.168.57.12
