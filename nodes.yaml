@@ -5,58 +5,18 @@ ssh: &ssh
   password: vagrant
 
 machines:
-- name: master
-  box: centos6
-  mem: 1024
-  cpus: 1
-  gui: False
-  controller: SATA Controller
-  hostname: master.dev.salt.yewu.js
-  ssh: *ssh
-  synced_folders: 
-    - host: salt
-      guest: /salt
-    - host: salt/roots/salt
-      guest: /srv/salt
-  private_network:
-    ip: 192.168.56.11
-  shell: |
-    yum install -y salt*
-    yum install -y git vim svn
-    rm -rf /etc/salt/master.d
-    ln -s /salt/etc/master.d /etc/salt/master.d
-    ln -s /salt/etc/extmods /etc/salt/extmods
-    sed -i '/^#default_include:/s;^#;;' /etc/salt/master
-    service salt-master restart
-- name: nginx
-  box: centos6
-  mem: 2048 
-  cpu: 2
-  gui: False
-  controller: SATA Controller
-  hostname: nginx
-  ssh: *ssh
-  private_network:
-    ip: 192.168.56.12
-  shell: |
-    yum install -y salt-minion
-    mkdir -p /etc/salt
-    sed -i 's;^#master:.*;master: 192.168.56.11;' /etc/salt/minion
-    echo "nginx.dev.salt.yewu.js" > /etc/salt/minion_id
-    service salt-minion restart
-
 - name: k8s-master
-  box: centos7
-  mem: 2048 
-  cpu: 2
+  box: packer/centos72
+  mem: 1048 
+  cpu: 1
   gui: False
   controller: SATA Controller
   hostname: k8s-master
   ssh: *ssh
   private_network:
-    ip: 192.168.57.11
+    ip: 10.34.57.11
 - name: k8s-node-1
-  box: centos7
+  box: packer/centos72
   mem: 2048 
   cpu: 2
   gui: False
@@ -64,4 +24,4 @@ machines:
   hostname: k8s-node-1
   ssh: *ssh
   private_network:
-    ip: 192.168.57.12
+    ip: 10.34.57.12
