@@ -2,8 +2,10 @@
 ssh: &ssh
   username: root
   password: vagrant
+
+machines:
 - name: k8s-master
-  box: centos7
+  box: packer/centos72
   mem: 2048 
   cpu: 2
   gui: False
@@ -13,7 +15,7 @@ ssh: &ssh
   private_network:
     ip: 10.34.60.11
 - name: k8s-node-1
-  box: centos7
+  box: packer/centos72
   mem: 2048 
   cpu: 2
   gui: False
