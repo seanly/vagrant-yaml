@@ -3,3 +3,4 @@
 *.pyc
 .disk
 repos
+.DS_Store
