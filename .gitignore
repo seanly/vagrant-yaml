@@ -2,3 +2,5 @@
 .idea
 *.pyc
 .disk
+repos
+.DS_Store

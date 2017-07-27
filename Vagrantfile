@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 require 'yaml'
 
-yaml_ctx = YAML.load_file 'nodes.yaml'
+yaml_ctx = YAML.load_file(File.join(File.dirname(__FILE__), 'hosts.yml'))
 machines = yaml_ctx['machines']
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
