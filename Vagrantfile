@@ -17,6 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       node.vm.box = machine['box']
       node.vm.box_check_update = false
       node.vm.provider 'virtualbox' do |vb|
+      node.vm.boot_timeout = 120
         if machine.include?('mem')
           vb.memory = machine['mem']
         end
@@ -77,6 +78,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       if ssh
         node.ssh.username = ssh['username']
         node.ssh.password = ssh['password']
+        node.ssh.insert_key = false
       end
 
       if machine.include?('synced_folders')
