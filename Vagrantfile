@@ -27,27 +27,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         if machine['cpus']
           vb.cpus = machine['cpus']
         end
-        data_disk = ".disk/#{machine['name']}-data.vdi"
-        controller = 'SATAController'
         if machine.include?('controller')
+          data_disk = ".disk/#{machine['name']}-data.vdi"
           controller = machine['controller']
-        end
-        if ARGV[0] == "up"
-          if ! File.exist?(data_disk)
+          if ARGV[0] == "up"
+            if ! File.exist?(data_disk)
+              vb.customize [
+                'createhd', 
+                '--filename', data_disk, 
+                '--format', 'VDI', 
+                '--size', 10 * 1024 # 10 GB
+              ] 
+            end
             vb.customize [
-              'createhd', 
-              '--filename', data_disk, 
-              '--format', 'VDI', 
-              '--size', 10 * 1024 # 10 GB
-            ] 
+              'storageattach', :id, 
+              '--storagectl', controller, 
+              '--port', 2, '--device', 0, 
+              '--type', 'hdd', '--medium', 
+              data_disk
+            ]
           end
-          vb.customize [
-            'storageattach', :id, 
-            '--storagectl', controller, 
-            '--port', 2, '--device', 0, 
-            '--type', 'hdd', '--medium', 
-            data_disk
-          ]
         end
       end
 
