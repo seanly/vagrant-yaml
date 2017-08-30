@@ -77,7 +77,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       if ssh
         node.ssh.username = ssh['username']
         node.ssh.password = ssh['password']
-        node.ssh.insert_key = false
       end
 
       if machine.include?('synced_folders')
