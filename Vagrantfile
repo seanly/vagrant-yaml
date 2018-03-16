@@ -18,14 +18,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       node.vm.box_check_update = false
       node.vm.provider 'virtualbox' do |vb|
       node.vm.boot_timeout = 120
-        if machine.include?('mem')
-          vb.memory = machine['mem']
-        end
         if machine.include?('gui')
           vb.gui = machine['gui']
+        else
+          vb.gui = false
         end
         if machine['cpus']
           vb.cpus = machine['cpus']
+        else
+          vb.cpus = 2
+        end
+        if machine.include?('mem')
+          vb.memory = machine['mem']
+        else
+          vb.memory = 2048
         end
         if machine.include?('controller')
           data_disk = ".disk/#{machine['name']}-data.vdi"
@@ -71,6 +77,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       if machine.include?('hostname')
         node.vm.hostname = machine['hostname']
+      else
+        node.vm.hostname = machine['name']
       end
 
       ssh = machine['ssh']
